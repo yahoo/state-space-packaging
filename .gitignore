@@ -3,3 +3,19 @@
 
 # obvious output trash
 o.*.out
+t99
+t99.*
+j99
+j99.*
+o99
+o99.*
+old
+old.*
+tmp
+tmp.*
+bak.*
+*.bak
+sav.*
+*.sav
+orig.*
+*.orig
