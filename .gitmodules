@@ -1,0 +1,3 @@
+[submodule "hyperledger/fabric"]
+	path = hyperledger/fabric
+	url = ssh://troth.fd1d-eca0-3168.net/repos/statespace/submodule-packaging-hyperledger-fabric.git

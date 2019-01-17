@@ -64,39 +64,45 @@ $1.arch = $(word 4, $($1.spec))
 $1.nv = $$($1.name)-$$($1.version)
 $1.nvr = $$($1.name)-$$($1.version)-$$($1.release)
 $1.nvr.arch = $($1.nvr.arch).$($1.arch)
-$1.nv.tarz = $$($1.nv).tar.gz
+# WATCHOUT - allow overriding from the calling Makefile so that a tarball with an syncratic name can be used
+$1.nv.tarz ?= $$($1.nv).tar.gz
 $1.nvr.tarz = $$(error NO SUCH variable $1.nvr.tarz, instead use $1.nv.tarz)
 $1.nv.spec = $$($1.nv).spec
 $1.nvr.spec = $$(error NO SUCH variable $1.nvr.spec, instead use $1.nv.spec)
 $1.nvr.src.rpm = $$($1.nvr).src.rpm
 $1.nvr.arch.rpm = $$($1.nvr).$$($1.arch).rpm
 endef
-DIRECTORY.temerarious-flagship = $(nearby)/temerarious-flagship
-DIRECTORY.tunitas-basics = $(nearby)/basics
-DIRECTORY.tunitas-butano = $(nearby)/butano
-DIRECTORY.tunitas-grabtown = $(nearby)/grabtown
-DIRECTORY.tunitas-lobitos = $(nearby)/lobitos
-DIRECTORY.tunitas-montara = $(nearby)/montara
-DIRECTORY.tunitas-pescadero = $(nearby)/pescadero
-DIRECTORY.tunitas-purissima = $(nearby)/purissima
-DIRECTORY.tunitas-rockaway = $(nearby)/rockaway
-DIRECTORY.tunitas-tarwater = $(nearby)/tarwater
+#
+# DIRECTORY.package
+# e.g.
+#
+#    DIRECTORY.temerarious-flagship = $(nearby)/temerarious-flagship
+#    DIRECTORY.tunitas-basics = $(nearby)/basics
+#    DIRECTORY.tunitas-butano = $(nearby)/butano
+#    DIRECTORY.tunitas-grabtown = $(nearby)/grabtown
+#    ...etc...
+#
 define RECIPE3 =
 $(rpmdir)/$$($1.nvr.arch)/$$($1.nvr.arch.rpm) : $(specdir)/$$($1.nv.spec) $(sourcedir)/$$($1.nv.tarz)
 	rpmbuild -ba $(__RPMBUILD_OPTIONS) $$(word 1,$$^)
 $(specdir)/$$($1.nv.spec) : $1.spec
 	install -c -m 444 $$< $$@
+$$(if $$(DIRECTORY.$1),$(__ok__),$$(error the variable DIRECTORY.$1 is unset))
+$(info DEBUG ifneq "ignore" "$(DIRECTORY.$1)")
+ifneq "ignore" "$(DIRECTORY.$1)"
 $(sourcedir)/$$($1.nv.tarz) : PACKAGE=$$($1.nv)
-$(sourcedir)/$$($1.nv.tarz) : DIRECTORY=$$(if $$(DIRECTORY.$1),$$(DIRECTORY.$1),$$(error $$(DIRECTORY.$1) is unset))
+$(sourcedir)/$$($1.nv.tarz) : DIRECTORY=$$(DIRECTORY.$1)
 $(sourcedir)/$$($1.nv.tarz) : .ALWAYS
 	tar \
 	    --transform='s,^\.,$$(if $$(PACKAGE),$$(PACKAGE),$$(error PACKAGE is unset))/,' \
 	    -C $$(if $$(DIRECTORY),$$(DIRECTORY),$$(error DIRECTORY is unset)) \
 	    -zcf $$@ .
+endif
 endef
+REDUNDANT.prefix = hyperledger
 define RECIPE4 =
-.PHONY: $(addprefix package-, $1 $(patsubst tunitas-%,%,$1))
-$(addprefix package-, $1 $(patsubst tunitas-%,%,$1)): $(rpmdir)/$($1.nvr.arch)/$($1.nvr.arch.rpm)
+.PHONY: $(addprefix package-, $1 $(patsubst $(addsuffix -%,$(REDUNDANT.prefix)),%,$1))
+$(addprefix package-, $1 $(patsubst $(addsuffix -%,$(REDUNDANT.prefix)),%,$1)): $(rpmdir)/$($1.nvr.arch)/$($1.nvr.arch.rpm)
 endef
 
 SRPMS = $(addprefix $(srpmdir)/, $(foreach package,$(PACKAGES),$($(package).nvr.src.rpm)))
