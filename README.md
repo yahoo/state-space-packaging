@@ -56,7 +56,25 @@ This will create a directory called `statespace-packaging` and download the cont
 
 ## Configuration
 
-There is no configuration step.
+Upon first clone of the repository, the git submodules system must be initialized.
+The command to run is `git submodule update --init`.  If your repo clone is at `/build/statespace/packaging` then should see something approximating the following:
+
+``` bash
+$ git submodule update --init
+Submodule 'hyperledger/fabric' (ssh://EXAMPLE.HOSTNAME/repos/statespace/submodule-packaging-hyperledger-fabric.git) registered for path 'hyperledger/fabric'
+Cloning into '/build/statespace/packaging/hyperledger/fabric'...
+Submodule path 'hyperledger/fabric': checked out 'ca9fcc740e69533807c252fb73059e19e40d728e'
+```
+Of course the checksum may vary.  The `01.maximum-hammer` release of State Space PrivacyChain should be fixed to the `04.bitter-vole` branch of Hyperledger Fabric.  You should check this, as follows, before proceeding:
+
+``` bash
+# cd hyperledger/fabric
+$ git branch -l
+* 04.bitter-vole
+  master
+```
+
+There is no other configuration step.
 
 ## Build
 
