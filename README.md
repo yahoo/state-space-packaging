@@ -127,3 +127,24 @@ Perhaps _you_ would contribute here.?
 * [Installation Directory Variables](https://www.gnu.org/software/autoconf/manual/autoconf-2.63/html_node/Installation-Directory-Variables.html), <em>Autoconf Manual</em>, GNU Project.
 * [Where are files installed](https://www.sourceware.org/autobook/autobook/autobook_76.html), In <em>That Certain Autotools Book</em> (sic).
 * [GNUInstallDirs](https://cmake.org/cmake/help/v3.9/module/GNUInstallDirs.html), Documentation for Cmake (here cited as) Version v3.9.
+
+## Security
+
+This repo offers packaging capabilities in support of the State Space reference implementation of the IAB PrivacyChain Technology Specification. As such, this project does not have any direct security concerns.
+
+However, good source code supply chain management practices should be used when building and deploying this software.  This includes at least the use of a verified chain-of-custody build system from the git-managed sources through the use of signed packages and repositories in deployment.  The description of such methods are beyond the scope of this overview presentation.  The point is that as code is deployed, you should know what you have built and where you got the components that you are deploying.
+
+# Contribute
+
+Please refer to [the contributing.md file](Contributing.md) for information about how to get involved. We welcome issues, questions, and pull requests. Pull Requests are welcome.
+
+# Maintainers
+- Wendell Baker <wbaker@verizonmedia.com>
+- The State Space Team at Verizon Media <state-space@verizonmedia.com>
+- The [IAB PrivacyChain Engineering Working Group](https://iabtechlab.com/working-groups/blockchain-working-group/).
+
+You may contact us at least at <state-space@verizonmedia.com>
+
+# License
+
+This project is licensed under the terms of the [Apache 2.0](LICENSE-Apache-2.0) open source license. Please refer to [LICENSE](LICENSE) for the full terms.
