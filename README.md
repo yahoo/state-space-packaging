@@ -41,7 +41,7 @@ Examples of this in material form are the directories: <code>/etc/privacychain</
 
 # Containerization
 
-The packaging and the filesystem hierarchy standard facilitates containerization by separating the system-independent and read-only filesystem elements, <em>e.g.</em> <code>&hellip;/bin</code</em>, <code>&hellip;/lib</code</em> and allies, from the system-dependent and instance-unique elements, <em>e.g.</em> <code>/etc</code>. Also segregated are the variable-sized storage areas which contain the data of the application, <em>e.g.</em> <code>/var</code>.  The [FHS](https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0/index.html) elaborates these design decisions and the reasoning behind them.  They are recited here in limited form to provide context and where the usage here differs extends the standard.
+The packaging and the filesystem hierarchy standard facilitates containerization by separating the system-independent and read-only filesystem elements, <em>e.g.</em> <code>&hellip;/bin</code></em>, <code>&hellip;/lib</code></em> and allies, from the system-dependent and instance-unique elements, <em>e.g.</em> <code>/etc</code>. Also segregated are the variable-sized storage areas which contain the data of the application, <em>e.g.</em> <code>/var</code>.  The [FHS](https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0/index.html) elaborates these design decisions and the reasoning behind them.  They are recited here in limited form to provide context and where the usage here differs extends the standard.
 
 # Nomenclature
 
