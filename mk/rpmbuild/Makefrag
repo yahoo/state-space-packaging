@@ -17,7 +17,7 @@ default:
 #
 #    make [ all ]                    the default, as is the convention
 #    make all                        make all packages
-#    make package-<PACKAGE>          e.g. make package-tunitas-lobitos
+#    make package-<PACKAGE>          e.g. make package-tooling, make-testing, make-PrivacyChain-sdk-cxx
 #
 # Internal (very specialized, rarely useful) components of package-<PACKAGE>
 # when topdir=/build/rpms
@@ -75,17 +75,22 @@ $1.nvr.src.rpm = $$($1.nvr).src.rpm
 $1.nvr.arch.rpm = $$($1.nvr).$$($1.arch).rpm
 endef
 #
-# DIRECTORY.package
+# DIRECTORY.package is to be set in the Makefile
 # e.g.
 #
-#    DIRECTORY.temerarious-flagship = $(nearby)/temerarious-flagship
-#    DIRECTORY.tunitas-basics = $(nearby)/basics
-#    DIRECTORY.tunitas-butano = $(nearby)/butano
-#    DIRECTORY.tunitas-grabtown = $(nearby)/grabtown
+#    DIRECTORY.state-space-tooling              = $(nearby)/tooling
+#    DIRECTORY.state-space-testing              = $(nearby)/testing
+#    DIRECTORY.state-space-privacychain-sdk-c++ = $(nearby)/PrivacyChain-sdk-c++
+#    DIRECTORY.state-space-fabric-sdk-c++       = $(nearby)/fabric-sdk-c++
+#    DIRECTORY.state-space-config-repo          = ignore <----------------------------- no tarball
 #    ...etc...
 #
 define RECIPE3 =
-$(rpmdir)/$$($1.nvr.arch)/$$($1.nvr.arch.rpm) : $(specdir)/$$($1.nv.spec) $(sourcedir)/$$($1.nv.tarz)
+#
+# If the DIRECTORY is  'ignore' then do not depend upon the tarball
+#                               then the dependencies are ad hoc and hand-coded in the Makefile
+#
+$(rpmdir)/$$($1.nvr.arch)/$$($1.nvr.arch.rpm) : $(specdir)/$$($1.nv.spec) $(if $(filter-out ignore,$(DIRECTORY.$1)),$(sourcedir)/$$($1.nv.tarz))
 	rpmbuild -ba $(__RPMBUILD_OPTIONS) $$(word 1,$$^)
 $(specdir)/$$($1.nv.spec) : $1.spec
 	install -c -m 444 $$< $$@
@@ -101,7 +106,7 @@ $(sourcedir)/$$($1.nv.tarz) : .ALWAYS
 	    -zcf $$@ .
 endif
 endef
-REDUNDANT.prefix = hyperledger
+REDUNDANT.prefix = state-space
 define RECIPE4 =
 .PHONY: $(addprefix package-, $1 $(patsubst $(addsuffix -%,$(REDUNDANT.prefix)),%,$1))
 $(addprefix package-, $1 $(patsubst $(addsuffix -%,$(REDUNDANT.prefix)),%,$1)): $(rpmdir)/$($1.nvr.arch)/$($1.nvr.arch.rpm)

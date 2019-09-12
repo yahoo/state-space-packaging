@@ -1,0 +1,43 @@
+# State Space -*- conf -*- 
+# Worthy Cupboard, Release 00
+#
+# The standard cost decay
+#  1000 is the default for far away repositories, e.g. Fedora
+#   500 is our https-based (https://)
+#   100 is our nfs-based (file://)
+#    10 is our local-based (file://)
+#     9 is our mock rebuilt
+#     1 is our infrastructure
+#
+
+# The repo is not signed & sealed (yet)
+# The packages are not signed & sealed (yet)
+# ... but we built these.
+
+
+[worthy-cupboard-host]
+enabled=0
+skip_if_unavailable=False
+failovermethod=priority
+cost=12
+metadata_expire=1s
+type=rpm
+name=Worthy Cupboard, Release 00, State Space, host-local
+baseurl=file:///var/repos/worthy-cupboard
+repo_gpgcheck=0
+gpgcheck=0
+gpgkey=
+
+[worthy-cupboard-public]
+enabled=1
+skip_if_unavailable=False
+failovermethod=priority
+cost=502
+metadata_expire=1s
+type=rpm
+name=Worthy Cupboard, Release 00, State Space, public
+baseurl=https://worthy-cupboard.repos.state-space.dev/fedora/$releasever
+# NO they use Let's Encrypt sslcacert=/etc/pki/something..something..dark-side/all.crt
+repo_gpgcheck=0
+gpgcheck=0
+gpgkey=
