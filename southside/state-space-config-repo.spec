@@ -19,14 +19,14 @@
 #          |         |      |    |
 #          |         |      |    |
 #          v         v      v    v
-#         %%{series}-config-repo-%%{reponame} <----- NO in this series the reponame appears in the Release tag
+#         %%{series}-config-repo-%%{reponame} <----- NO in this series the %%{reponame} does not appear in the package ENVR at all
 Name:      %{series}-config-repo
 Conflicts: foes-config-repo-%{series}-%{reponame}
 #
-# Version 1 is Release 01
+# Version 1 is Release 01, which only applies because this is the repository configuration file package itself.
 Version:   1.0.0
 # reminder, you CANNOT put the %%{releasename} in Version or Release because it contains a '-' character
-Release:   1%{?dist}
+Release:   2%{?dist}
 
 # dnf or yum?  it is /etc/dnf but /etc/yum.repos.d
 %global pkglocalstatedir %{_localstatedir}/state-space
@@ -85,5 +85,8 @@ The repository configuration for %{fullname}.
 %postun
 
 %changelog
+* Thu Sep 12 2019 Wendell Baker <wbaker@verizonmedia.com> - 1.0.0-2
+- more precise commentariat
+
 * Thu Sep 12 2019 Wendell Baker <wbaker@verizonmedia.com> - 1.0.0-1
 - first build packaging

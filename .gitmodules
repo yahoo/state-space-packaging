@@ -4,12 +4,16 @@
 [submodule "sources/PrivacyChain-sdk-c++"]
 	path = sources/PrivacyChain-sdk-c++
 	url = ssh://git.state-space.dev/repos/state-space/core/PrivacyChain-sdk-c++.git
+        branch = series/v0.0/01.maximum-hammer
 [submodule "sources/fabric-sdk-c++"]
 	path = sources/fabric-sdk-c++
 	url = ssh://git.state-space.dev/repos/state-space/core/fabric-sdk-c++.git
+        branch = series/v0.0/01.maximum-hammer
 [submodule "sources/tooling"]
 	path = sources/tooling
 	url = ssh://git.state-space.dev/repos/state-space/core/tooling.git
+        branch = series/v0.0/01.maximum-hammer
 [submodule "sources/testing"]
 	path = sources/testing
 	url = ssh://git.state-space.dev/repos/state-space/core/testing.git
+        branch = series/v0.0/01.maximum-hammer
