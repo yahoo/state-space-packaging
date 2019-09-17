@@ -7,9 +7,9 @@
 #   make [all]
 #
 #   make package-fabric-sdk-c++           s/state-space-// 
-#   make package-privacychain-sdk-c++
-#   make package-tooling
-#   make package-testing
+#   make package-privacychain-sdk-c++     ... see how this is done
+#   make package-tooling                  to get state-space-testing-$REVISION.*.rpm
+#   make package-testing                  make package-testing
 #   make package-config-repo
 #
 default:

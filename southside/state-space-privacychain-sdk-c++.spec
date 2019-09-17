@@ -6,21 +6,21 @@
 # https://wiki.tunitas.technology/page/Libtool
 # https://wiki.scold-lang.org/page/Libtool
 # -all-static
-#    If output-file is a library, then only create a static library. This flag cannot be used together with disable-static (see LT_INIT).
-#    If output-file is a program, then do not link it against any shared libraries at all. 
+#    If the output-file is a library, then only create a static library. This flag cannot be used together with disable-static (see LT_INIT).
+#    If the output-file is a program, then do not link it against any shared libraries at all. 
 # -static
-#    If output-file is a library, then only create a static library.
-#    If output-file is a program, then do not link it against any uninstalled shared libtool libraries. 
+#    If the output-file is a library, then only create a static library.
+#    If the output-file is a program, then do not link it against any uninstalled shared libtool libraries. 
 # -static-libtool-libs
-#    If output-file is a library, then only create a static library.
-#    If output-file is a program, then do not link it against any shared libtool libraries. 
+#    If the output-file is a library, then only create a static library.
+#    If the output-file is a program, then do not link it against any shared libtool libraries. 
 #
 # i.e. the 'without' are by default enabled
 #      the 'with'    are by default disabled
 #
 %bcond_without static_libtool_libs
 
-%global _prefix /opt/tunitas
+%global _prefix /opt/state-space
 %define modulesdir %{_prefix}/modules
 
 %global series   state-space
@@ -29,9 +29,10 @@
 
 %global pkglocalstatedir %{_localstatedir}/state-space
 
-%global std_tunitas_prefix /opt/tunitas
-%global std_scold_prefix   /opt/scold
 %global std_hyperledger_fabric_prefix   /opt/hyperledger/fabric
+%global std_scold_prefix                /opt/scold
+%global std_state_space_prefix          /opt/state-space
+%global std_tunitas_prefix              /opt/tunitas
 
 #
 # Dissection of the Name
@@ -46,8 +47,8 @@
 #          |         |
 #          v         v
 Name:      %{series}-privacychain-sdk-c++
-Version:   0.0.0
-Release:   1%{?dist}
+Version:   0.0.3
+Release:   2%{?dist}
 
 # <tutorial ref="https://docs.fedoraproject.org/en-US/Fedora_Draft_Documentation/0.1/html/RPM_Guide/ch-specfile-syntax.html" />
 # <tutorial ref="http://www.rpm.org/max-rpm/s1-rpm-build-creating-spec-file.html" />
@@ -93,10 +94,19 @@ BuildRequires: tunitas-butano-devel >= %{tunitas_butano_version}
 Requires:      tunitas-butano >= %{tunitas_butano_version}
 %endif
 
+%bcond_with hyperledger_fabric
+%if %{with hyperleder_fabric}
 %define hyperledger_fabric_version 1.4.0
 BuildRequires: hyperledger-fabric-devel >= %{hyperledger_fabric_version}
 %if %{without static_libtool_libs}
 Requires:      hyperledger-fabric >= %{hyperledger_fabric_version}
+%endif
+%endif
+
+%define state_space_fabric_version 0.0.2
+BuildRequires: state-space-fabric-sdk-c++-devel >= %{state_space_fabric_version}
+%if %{without static_libtool_libs}
+Requires:      state-space-fabric-sdk-c++ >= %{state_space_fabric_version}
 %endif
 
 # the 'without' are by default enabled
@@ -125,6 +135,7 @@ BuildRequires: module-nonstd-devel >= %{module_nonstd_version}
 Requires:      module-nonstd >= %{module_nonstd_version}
 %endif
 
+# requires currency beyond 04.green-copper-heron
 %define module_posix_version 2:0.27.0
 BuildRequires: module-posix-devel >= %{module_posix_version}
 %if %{without static_libtool_libs}
@@ -167,23 +178,33 @@ BuildRequires: (module-unit-rigging-devel >= %{module_rigging_unit_version} or m
 %endif
 
 %description
-A C++ API for use with Hyperledger Fabric.  The implementation herein is optimized to perform with Hyperledger Fabric v1.4.
+A C++ API for use with Hyperledger Fabric.
+The implementation herein is optimized to perform with Hyperledger Fabric v1.4.
 
 %package devel
-Summary: The development components of the Tunitas Tarwater Identity Management System
+Summary: The development components of the State Space Solutions implementation of the IAB PrivacyChain Specification
+
 Requires: %{name}%{?_isa} = %{version}-%{release}
 Requires: gcc-c++
+%if %{with hyperleder_fabric}
+Requires: hyperledger-fabric-devel
+%endif
+Requires: state-space-fabric-sdk-c++-devel
 Requires: module-nonstd-devel
 Requires: module-posix-devel
 Requires: module-std-devel
 Requires: (module-c-string-devel >= %{module_string_version} or module-string-devel >= %{module_string_version})
 Requires: module-sys-devel
+%if %{with nonstd_jsoncpp}
+Requires: nonstd-jsoncpp-devel
+%endif
 
 %description devel
-A C++ API for use with Hyperledger Fabric.
-
-The S.C.O.L.D.-style modules of 'namespace hyperledger::PrivacyChain' are supplied.
+The S.C.O.L.D.-style modules of 'namespace iab::privacychain' are supplied.
 These are "header files" and static & shared libraries.
+
+This is a C++ API for use with Hyperledger Fabric.
+The implementation herein is optimized to perform with Hyperledger Fabric v1.4.
 
 %prep
 %autosetup
@@ -197,37 +218,48 @@ eval \
     ./buildconf
 %configure \
     --prefix=%{_prefix} \
+    --enable-FIXTHIS-when-it-exists-add-back__with-std-hyperledger-fabric=%{std_hyperledger_fabric_prefix} \
     --with-std-scold=%{std_scold_prefix} \
+    --with-std-state-space=%{std_state_space_prefix} \
     --with-std-tunitas=%{std_tunitas_prefix} \
     --with-temerarious-flagship=%{std_tunitas_prefix} --with-FIXTHIS=this_should_not_be_needed_the_std_tunitas_should_be_sufficient \
     ${end}
+# Build ID
+#
+# Folklore:
+#   c2008 https://fedoraproject.org/wiki/Releases/FeatureBuildId
+#   c2007 <broken>http://people.redhat.com/roland/build-id/</broken>
+#   c200? <discursive>http://pkgbuild.sourceforge.net/spec-files.txt</discursive>, helpful but specific to Sun Microsystems.
+#
+# WATCHOUT - must pass --builtin directly to the linker
+#            else g++: error: unrecognized command line option '--build-id'; did you mean '--builtin'?
+# and --build-id gives sha1 of the build, --build-id=uuid merely generates an identifer
+%global __build_id_LDFLAGS -Wl,--build-id
 %make_build \
-    %{?with_static_libtool_libs:LDFLAGS=-static-libtool-libs} \
+    LDFLAGS='%{__build_id_LDFLAGS} %{?with_static_libtool_libs: -static-libtool-libs}' \
     ${end}
 
 %install
-%make_install
+%make_install \
+    LDFLAGS='%{__build_id_LDFLAGS} %{?with_static_libtool_libs: -static-libtool-libs}' \
+    ${end}
 
 %check
-: nothing to check
+%make_build check
 
 %clean
 : nothing clean
 
 %files
 %license LICENSE
-%if %{without static_libtool_libs}
 %{_libdir}/*.so.*
-%endif
 
 %files devel
 %doc README.md
 %{modulesdir}/*
 # even if the executable is statically linked, the libraries are available for development (they will be static libraries)
 %{_libdir}/*
-%if %{with static_libtool_libs}
 %exclude %{_libdir}/*.so.*
-%endif
 %exclude %{modulesdir}/want
 %exclude %{modulesdir}/fpp/want
 %exclude %{modulesdir}/hpp/want
@@ -239,5 +271,18 @@ eval \
 %postun
 
 %changelog
+* Tue Sep 17 2019 Wendell Baker <wbaker@verizonmedia.com> - 0.0.3-2
+- no longer mention tests.unit.transaction.Identifier in the public interface
+- and link with --build-id
+
+* Mon Sep 16 2019 Wendell Baker <wbaker@verizonmedia.com> - 0.0.2-1
+- and install the iab.privacychain.schema and iab.privacychain.history module sets
+
+* Mon Sep 16 2019 Wendell Baker <wbaker@verizonmedia.com> - 0.0.1-3
+- deliver the static and the dso; downstream they will apply -static-libtool-libs as fits their needs
+- make check and clean
+- use the deprecated BB_SOURCE_SET to power the install rule
+- align the --with-std-{hyperledger-fabric,scold,state-space,tunitas}=DIRECTORY options and the relevant rpm variables
+
 * Fri Sep 13 2019 Wendell Baker <wbaker@verizonmedia.com> - 0.0.0-1
 - first packaging
