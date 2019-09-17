@@ -6,21 +6,21 @@
 # https://wiki.tunitas.technology/page/Libtool
 # https://wiki.scold-lang.org/page/Libtool
 # -all-static
-#    If output-file is a library, then only create a static library. This flag cannot be used together with disable-static (see LT_INIT).
-#    If output-file is a program, then do not link it against any shared libraries at all. 
+#    If the output-file is a library, then only create a static library. This flag cannot be used together with disable-static (see LT_INIT).
+#    If the output-file is a program, then do not link it against any shared libraries at all. 
 # -static
-#    If output-file is a library, then only create a static library.
-#    If output-file is a program, then do not link it against any uninstalled shared libtool libraries. 
+#    If the output-file is a library, then only create a static library.
+#    If the output-file is a program, then do not link it against any uninstalled shared libtool libraries. 
 # -static-libtool-libs
-#    If output-file is a library, then only create a static library.
-#    If output-file is a program, then do not link it against any shared libtool libraries. 
+#    If the output-file is a library, then only create a static library.
+#    If the output-file is a program, then do not link it against any shared libtool libraries. 
 #
 # i.e. the 'without' are by default enabled
 #      the 'with'    are by default disabled
 #
 %bcond_without static_libtool_libs
 
-%global _prefix /opt/tunitas
+%global _prefix /opt/state-space
 %define modulesdir %{_prefix}/modules
 
 %global series   state-space
@@ -29,8 +29,10 @@
 
 %global pkglocalstatedir %{_localstatedir}/state-space
 
-%global std_tunitas_prefix /opt/tunitas
-%global std_scold_prefix   /opt/scold
+%global std_hyperledger_fabric_prefix /opt/hyperledger/fabric
+%global std_scold_prefix              /opt/scold
+%global std_state_space_prefix        /opt/state-space
+%global std_tunitas_prefix            /opt/tunitas
 
 #
 # [[FIXTHIS]] many of these southside schemes are not yet possible in state space (tooling).
@@ -92,7 +94,6 @@
 # See below, you need at least leveldb-1.20 with the Fedora-specific API patches
 %warning specifying nonstd_leveldb is required on Fedora 27 because there is no "standard" leveldb prior to Fedora 28
 %endif
-%warning DEBUG %{?with_nonstd_leveldb} %{?nonstd_leveldb_prefix}
 
 #
 # Dissection of the Name
@@ -107,7 +108,7 @@
 #          |         |
 #          v         v
 Name:      %{series}-tooling
-Version:   0.0.0
+Version:   0.0.1
 Release:   1%{?dist}
 
 # <tutorial ref="https://docs.fedoraproject.org/en-US/Fedora_Draft_Documentation/0.1/html/RPM_Guide/ch-specfile-syntax.html" />
@@ -126,7 +127,10 @@ Packager: Wendell Baker <wbaker@verizonmedia.com>
 # Hyperledger Fabric is a database (a distributed database with a very quirky stored procedure system)
 Group: Database/State Space
 
-Source0: %{name}-%{version}.tgz
+Source0: %{name}-%{version}.tar.gz
+
+BuildRequires: temerarious-flagship >= 1.4.2
+BuildRequires: hypogeal-twilight, incendiary-sophist >= 0.2.2
 
 BuildRequires: automake, autoconf, libtool, make
 # We're going to go as close to C++2a as the compiler will allow.
@@ -137,7 +141,17 @@ BuildRequires: gcc-c++ >= 7.1.0
 # http://rpm.org/user_doc/boolean_dependencies.html
 BuildRequires: (SCOLD-DC or anguish-answer or baleful-ballad or ceremonial-contortion or demonstrable-deliciousness)
 
-BuildRequires: temerarious-flagship >= 1.4.2
+%define state_space_fabric_version 0.0.1
+BuildRequires: state-space-fabric-sdk-c++-devel >= %{state_space_fabric_version}
+%if %{without static_libtool_libs}
+Requires:      state-space-fabric-sdk-c++ >= %{state_space_fabric_version}
+%endif
+
+%define state_space_privacychain_version 0.0.1
+BuildRequires: state-space-privacychain-sdk-c++-devel >= %{state_space_privacychain_version}
+%if %{without static_libtool_libs}
+Requires:      state-space-privacychain-sdk-c++ >= %{state_space_privacychain_version}
+%endif
 
 # WATCHOUT - the use of Release:6 in the NEVR = tunitas-basics-1.8.2-6 is critical
 #            because it is only at Release:6 that the basics were built against nonstd-libhttpserver >= 0.9.0-7.1.ipv6+poll+regex+api
@@ -156,6 +170,25 @@ Requires:      tunitas-butano >= %{tunitas_butano_version}
 
 # the 'without' are by default enabled
 # the 'with'    are by default disabled
+%bcond_with nonstd_jsoncpp
+%if %{with nonstd_jsoncpp}
+# Generally this is not warranted after jsoncpp-devel-1.7 era
+%define nonstd_jsoncpp_version 1.7
+%define nonstd_jsoncpp_prefix /opt/nonstd/jsoncpp
+BuildRequires: nonstd-jsoncpp-devel >= %{nonstd_jsoncpp_version}
+%if %{without static_libtool_libs}
+Requires:      nonstd-jsoncpp >= %{nonstd_jsoncpp_version}
+%endif
+%endif
+# requires currency beyond 04.green-copper-heron
+%define module_json_version 2:0.8.0
+BuildRequires: module-json-devel >= %{module_json_version}
+%if %{without static_libtool_libs}
+Requires:      module-json >= %{module_json_version}
+%endif
+
+# the 'without' are by default enabled
+# the 'with'    are by default disabled
 # the nonstd prefix will need to be mentioned in the configuration step
 %bcond_with nonstd_leveldb
 %if %{with southside_leveldb}
@@ -166,9 +199,108 @@ Requires:      module-leveldb >= %{module_leveldb_version}
 %endif
 %endif
 
+# requires currency beyond 04.green-copper-heron
+%define module_nonstd_version 2:0.3.0
+BuildRequires: module-nonstd-devel >= %{module_nonstd_version}
+%if %{without static_libtool_libs}
+Requires:      module-nonstd >= %{module_nonstd_version}
+%endif
+
+%define module_options_version 0.14.0
+BuildRequires: module-options-devel >= %{module_options_version}
+%if %{without static_libtool_libs}
+Requires:      module-options >= %{module_options_version}
+%endif
+
+# requires currency beyond 04.green-copper-heron
+%define module_posix_version 2:0.27.0
+BuildRequires: module-posix-devel >= %{module_posix_version}
+%if %{without static_libtool_libs}
+Requires:      module-posix >= %{module_posix_version}
+%endif
+
+# requires currency beyond 04.green-copper-heron
+%define module_rabinpoly_version 2:0.2.0
+BuildRequires: module-rabinpoly-devel >= %{module_rabinpoly_version}
+%if %{without static_libtool_libs}
+Requires:      module-rabinpoly >= %{module_rabinpoly_version}
+%endif
+
+%define module_std_version 2:0.27.0
+BuildRequires: module-std-devel >= %{module_std_version}
+%if %{without static_libtool_libs}
+Requires:      module-std >= %{module_std_version}
+%endif
+
+%define module_c_string_version 0.12.0
+%define module_string_version   0.13.1
+BuildRequires: (module-c-string-devel >= %{module_string_version} or module-string-devel >= %{module_string_version})
+%if %{without static_libtool_libs}
+Requires:      (module-c-string >= %{module_string_version} or module-string >= %{module_string_version})
+%endif
+
+%define module_sys_version 2:0.27.0
+BuildRequires: module-sys-devel >= %{module_sys_version}
+%if %{without static_libtool_libs}
+Requires:      module-sys >= %{module_sys_version}
+%endif
+
+%define module_uuid_version 0.3.0
+BuildRequires: module-uuid-devel >= %{module_uuid_version}
+%if %{without static_libtool_libs}
+Requires:      module-uuid >= %{module_uuid_version}
+%endif
+
+# the 'without' are by default enabled
+# the 'with'    are by default disabled
+%bcond_without make_check
+%if %{with make_check}
+%define module_rigging_unit_version 0.8.1
+%define module_rigging_version      2:0.10.0
+BuildRequires: (module-unit-rigging-devel >= %{module_rigging_unit_version} or module-rigging-devel >= %{module_rigging_version})
+%endif
 
 %description
-The repository configuration for %{fullname}.
+Operability tooling for the State Space Solutions configuration of the Hyperledger Fabric data base.
+
+%package devel
+Summary: The development components of the State Space Solutions operability tool suite
+Requires: %{name}%{?_isa} = %{version}-%{release}
+Requires: gcc-c++
+%if %{with hyperleder_fabric}
+Requires: hyperledger-fabric-devel
+%endif
+Requires: state-space-privacychain-sdk-c++-devel
+Requires: state-space-fabric-sdk-c++-devel
+Requires: tunitas-butano-devel
+Requires: tunitas-basics-devel
+Requires: module-json-devel
+%if %{with southside_leveldb}
+Requires: module-leveldb-devel
+%endif
+Requires: module-nonstd-devel
+Requires: module-options-devel
+Requires: module-posix-devel
+Requires: module-rabinpoly-devel
+Requires: module-std-devel
+Requires: (module-c-string-devel or module-string-devel)
+Requires: module-string-devel
+Requires: module-sys-devel
+Requires: module-uuid-devel
+%if %{with nonstd_jsoncpp}
+Requires: nonstd-jsoncpp-devel
+%endif
+%if %{with southside_leveldb}
+%if %{with nonstd_leveldb}
+Requires: nonstd-leveldb-devel
+%endif
+%endif
+
+%description devel
+A C++ API for use with Hyperledger Fabric.
+
+The S.C.O.L.D.-style modules of 'namespace hyperledger::PrivacyChain' are supplied.
+These are "header files" and static & shared libraries.
 
 %prep
 %autosetup
@@ -182,38 +314,76 @@ eval \
     ./buildconf
 %configure \
     --prefix=%{_prefix} \
+    --enable-FIXTHIS-when-it-exists-add-back__with-std-hyperledger-fabric=%{std_hyperledger_fabric_prefix} \
     --with-std-scold=%{std_scold_prefix} \
+    --with-std-state-space=%{std_state_space_prefix} \
     --with-std-tunitas=%{std_tunitas_prefix} \
     --with-temerarious-flagship=%{std_tunitas_prefix} --with-FIXTHIS=this_should_not_be_needed_the_std_tunitas_should_be_sufficient \
     ${end}
+# Build ID
+#
+# Folklore:
+#   c2008 https://fedoraproject.org/wiki/Releases/FeatureBuildId
+#   c2007 <broken>http://people.redhat.com/roland/build-id/</broken>
+#   c200? <discursive>http://pkgbuild.sourceforge.net/spec-files.txt</discursive>, helpful but specific to Sun Microsystems.
+#
+# WATCHOUT - must pass --builtin directly to the linker
+#            else g++: error: unrecognized command line option '--build-id'; did you mean '--builtin'?
+# and --build-id gives sha1 of the build, --build-id=uuid merely generates an identifer
+%global __build_id_LDFLAGS -Wl,--build-id
 %make_build \
-    %{?with_static_libtool_libs:LDFLAGS=-static-libtool-libs} \
+    LDFLAGS='%{__build_id_LDFLAGS} %{?with_static_libtool_libs: -static-libtool-libs}' \
     ${end}
 
 %install
-# 
-%{__mkdir_p} %{buildroot}%{pkglocalstatedir}
-#
-# install -D is mkdir -p $(@D)
-# install -d is mkdir -p everything
-%{__install} -d %{buildroot}%{pkgsysconfdir}
-%{__install} -D -m 444 %{_sourcedir}/01.maximum-hammer.repo %{buildroot}%{pkgsysconfdir}/.
+%make_install \
+    LDFLAGS='%{__build_id_LDFLAGS} %{?with_static_libtool_libs: -static-libtool-libs}' \
+    ${end}
 
 %check
-: nothing to check
+%make_build check
 
 %clean
-: nothing clean
+%make_build clean
 
 %files
 %defattr(444,root,root,-)
-%{pkgsysconfdir}
+%license LICENSE
+%{_bindir}/*
+%if %{without static_libtool_libs}
+%{_libdir}/*.so.*
+%endif
+
+%files devel
+%doc README.md
+%{modulesdir}/*
+# even if the executable is statically linked, the libraries are available for development (they will be static libraries)
+# reminder: the sst libraries are used in state-space-testing so you will need them even if the executables are linked -static-libtool-libs
+%{_libdir}/*
+%if %{without static_libtool_libs}
+%exclude %{_libdir}/*.so.*
+%endif
+%exclude %{modulesdir}/want
+%exclude %{modulesdir}/fpp/want
+%exclude %{modulesdir}/hpp/want
+%exclude %{modulesdir}/ipp/want
 
 %pre
 %post
+# show that they function (enough DSO are installed)
+%{_prefix}/bin/pcd --version
+%{_prefix}/bin/pck --version
+%{_prefix}/bin/pct --version
+
 %preun
 %postun
 
 %changelog
+* Tue Sep 17 2019 Wendell Baker <wbaker@verizonmedia.com> - 0.0.1-1
+- package the executables
+- build install with the deprecated BB_SOURCE_SET because that is the one that works
+- align the --with-std-{hyperledger-fabric,scold,state-space,tunitas}=DIRECTORY options and the relevant rpm variables
+- avoid --with-std-hyperledger-fabric because Release 01 (Maximum Hammer) is not ready for it yet
+
 * Fri Sep 13 2019 Wendell Baker <wbaker@verizonmedia.com> - 0.0.0-1
-- first packaging
+- first packaging, a skeleton, does not package the project
