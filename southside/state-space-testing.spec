@@ -109,7 +109,7 @@
 #          v         v
 Name:      %{series}-testing
 Version:   0.0.1
-Release:   1%{?dist}
+Release:   2%{?dist}
 
 # <tutorial ref="https://docs.fedoraproject.org/en-US/Fedora_Draft_Documentation/0.1/html/RPM_Guide/ch-specfile-syntax.html" />
 # <tutorial ref="http://www.rpm.org/max-rpm/s1-rpm-build-creating-spec-file.html" />
@@ -139,7 +139,7 @@ BuildRequires: gcc-c++ >= 7.1.0
 # But until ModulesTS is available S.C.O.L.D methodology is used.
 # https://fedoraproject.org/wiki/Packaging:Guidelines#Rich.2FBoolean_dependencies
 # http://rpm.org/user_doc/boolean_dependencies.html
-BuildRequires: (SCOLD-DC or anguish-answer or baleful-ballad or ceremonial-contortion or demonstrable-deliciousness)
+BuildRequires: (SCOLD-DC or anguish-answer >= 2.0 or baleful-ballad >= 0.16 or ceremonial-contortion or demonstrable-deliciousness)
 
 %define state_space_fabric_version 0.0.1
 BuildRequires: state-space-fabric-sdk-c++-devel >= %{state_space_fabric_version}
@@ -251,6 +251,9 @@ eval \
 %postun
 
 %changelog
+* Wed Sep 18 2019 Wendell Baker <wbaker@verizonmedia.com> - 0.0.1-2
+- specify tighter version constraints on anguish-answer and baleful-ballad; specifically anguish-answer >= 2.0
+
 * Tue Sep 17 2019 Wendell Baker <wbaker@verizonmedia.com> - 0.0.1-1
 - package the executables
 - build install with the deprecated BB_SOURCE_SET because that is the one that works

@@ -48,7 +48,7 @@
 #          v         v
 Name:      %{series}-privacychain-sdk-c++
 Version:   0.0.3
-Release:   2%{?dist}
+Release:   3%{?dist}
 
 # <tutorial ref="https://docs.fedoraproject.org/en-US/Fedora_Draft_Documentation/0.1/html/RPM_Guide/ch-specfile-syntax.html" />
 # <tutorial ref="http://www.rpm.org/max-rpm/s1-rpm-build-creating-spec-file.html" />
@@ -77,7 +77,7 @@ BuildRequires: gcc-c++ >= 7.1.0
 # But until ModulesTS is available S.C.O.L.D methodology is used.
 # https://fedoraproject.org/wiki/Packaging:Guidelines#Rich.2FBoolean_dependencies
 # http://rpm.org/user_doc/boolean_dependencies.html
-BuildRequires: (SCOLD-DC or anguish-answer or baleful-ballad or ceremonial-contortion or demonstrable-deliciousness)
+BuildRequires: (SCOLD-DC or anguish-answer >= 2.0 or baleful-ballad >= 0.16 or ceremonial-contortion or demonstrable-deliciousness)
 
 # WATCHOUT - the use of Release:6 in the NEVR = tunitas-basics-1.8.2-6 is critical
 #            because it is only at Release:6 that the basics were built against nonstd-libhttpserver >= 0.9.0-7.1.ipv6+poll+regex+api
@@ -271,6 +271,9 @@ eval \
 %postun
 
 %changelog
+* Wed Sep 18 2019 Wendell Baker <wbaker@verizonmedia.com> - 0.0.3-3
+- specify tighter version constraints on anguish-answer and baleful-ballad; specifically anguish-answer >= 2.0
+
 * Tue Sep 17 2019 Wendell Baker <wbaker@verizonmedia.com> - 0.0.3-2
 - no longer mention tests.unit.transaction.Identifier in the public interface
 - and link with --build-id
