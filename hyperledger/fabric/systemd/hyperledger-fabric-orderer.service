@@ -1,0 +1,12 @@
+[Unit]
+Description=Hyperledger Fabric Orderer Service
+After=syslog.target network.target
+
+[Service]
+User=fabric
+ExecStart=/opt/hyperledger/fabric/bin/orderer
+ExecReload=/bin/kill -HUP $MAINPID
+KillMode=process
+
+[Install]
+WantedBy=multi-user.target

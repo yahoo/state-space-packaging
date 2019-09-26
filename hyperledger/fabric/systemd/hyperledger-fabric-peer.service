@@ -1,0 +1,12 @@
+[Unit]
+Description=Hyperledger Fabric Peer Service
+After=syslog.target network.target
+
+[Service]
+User=fabric
+ExecStart=/opt/hyperledger/fabric/bin/peer node start
+ExecReload=/bin/kill -HUP $MAINPID
+KillMode=process
+
+[Install]
+WantedBy=multi-user.target
