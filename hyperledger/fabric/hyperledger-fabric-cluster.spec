@@ -237,7 +237,7 @@ usermod -p '%{password}' %{username}
 %changelog
 # DO NOT use ISO-8601 dates; only use date +'%%a %%b %%d %%Y'
 
-* Thu Sep 25 2019 - Wendell Baker <wbaker@verizonmedia.com> - 1.4.0-5.vzmf04
+* Tue Sep 25 2019 - Wendell Baker <wbaker@verizonmedia.com> - 1.4.0-5.vzmf04
 - first packaging for State Space Solutions, Release 01 (Maximum Hammer)
 - incorporate (inline) the possibility of establishing user.group fabric in lieu of Recommends user-fabric
 
