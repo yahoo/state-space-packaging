@@ -1,4 +1,4 @@
-# Copyright 2019, Oath Inc.
+# Copyright Yahoo Inc. 2021.
 # Licensed under the terms of the Apache-2.0 license.
 # See the LICENSE file in https://github.com/yahoo/state-space-packaging/blob/master/LICENSE for terms.
 
@@ -27,9 +27,9 @@ Summary: The Hyperledger Fabric Cluster
 License: Apache-2.0
 
 URL: https://www.hyperledger.org/projects/fabric
-Distribution: Verizon Media FABRICating (VZMF)
-Vendor: Verizon Media (VZM)
-#Packager: That Certain Person <that@verizonmedia.com>
+Distribution: Yahoo FABRICating (YFABRIC)
+Vendor: Yahoo Inc.
+#Packager: That Certain Person <that@yahooinc.com>
 Group:   Applications/Hyperledger
 
 # Following https://github.com/InteractiveAdvertisingBureau/PrivacyChain/blob/master/build.md
