@@ -81,7 +81,7 @@ The configuration area contains
 
 ## Installation Area ##
 
-The application installation area is <code>/opt</code.
+The application installation area is <code>/opt</code>.
 
 | Path | Scope | Contains |
 | --- | --- | --- |
@@ -97,7 +97,7 @@ The application installation area is <code>/opt</code.
 
 This is somewhat at variance with the [FHS](https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0/index.html) which guides that application state should be in directories within <code>/var/lib</code>.  Our expectation, being as these are blockchain-based projects with potentially <em>unlimited</em> storage needs, that the application data directories will need to be served from storage systems that are strong enough to scale towards that infinite future.  Obviously that's a core problem in the blockchain concept itself; but until such time as this is resolved by technology, policy or fiat, the filesystem hierarchy will have to facilitate _very very large storage_  within the application design plan, <em>e.g.</em> [IPFS](https://ipfs.io/) or [Ceph](https://ceph.com/).
 
-# The Great Cultures
+# The Great Packagers
 
 ## RPM Systems
 
@@ -110,7 +110,7 @@ Perhaps _you_ would contribute here.?
 
 ## Other
 
-This would likely be support for those who wish to develop & test on Apple gear
+This would likely be support for those who wish to develop & test on <em>other</em> gear.
 Perhaps _you_ would contribute here.?
 
 ## None
