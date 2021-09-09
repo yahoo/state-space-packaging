@@ -2,8 +2,8 @@
 # Licensed under the terms of the Apache-2.0 license.
 # See the LICENSE file in https://github.com/yahoo/state-space-packaging/blob/master/LICENSE for terms.
 
-# Verizon (VZ) Media (VZM), Release 04 Bitter Vole
-%global fabricate vzmf04
+# Yahoo FABRICating, Release 04 Bitter Vole
+%global fabricate yf04
 %global fabricate_dist %{?fabricate:.%{fabricate}}
 
 # but could reasonably be unassigned (defaulting to /usr)
