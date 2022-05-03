@@ -136,8 +136,9 @@ However, good source code supply chain management practices should be used when 
 
 # Contribute
 
-Please refer to [the contributing.md file](Contributing.md) for information about how to get involved. We welcome issues, questions, and pull requests. Pull Requests are welcome.
+Please refer to [contribution instructions](Contributing.md) for information about how to get involved. We welcome issues, questions, and pull requests. Pull Requests are welcome.
 
+Current work with modern-generation tooling, <em>e.g.</em> circa Fedora 36+ and GCC 12+, is occurring around the <em>thematic</em> themed branches; <em>e.g.</em> 01.worthy-cupboard, 02.maximum-hammer and so forth.
 # Maintainers
 - Wendell Baker <wbaker@yahooinc.com>
 - The State Space Team at Yahoo <state-space@yahooinc.com>
